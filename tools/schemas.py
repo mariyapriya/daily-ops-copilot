@@ -9,24 +9,26 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from tools.coercion import OptionalStr, StrList
+
 
 class GetEmails(BaseModel):
-    since: str | None = Field(default=None, description="ISO datetime; only return emails received at or after this.")
+    since: OptionalStr = Field(default=None, description="ISO datetime; only return emails received at or after this.")
 
 
 class GetCalendarEvents(BaseModel):
-    start: str | None = Field(default=None, description="ISO datetime lower bound (inclusive).")
-    end: str | None = Field(default=None, description="ISO datetime upper bound (inclusive).")
+    start: OptionalStr = Field(default=None, description="ISO datetime lower bound (inclusive).")
+    end: OptionalStr = Field(default=None, description="ISO datetime upper bound (inclusive).")
 
 
 class GetTasks(BaseModel):
-    status: str | None = Field(default=None, description="Filter by status: 'open', 'done', or 'blocked'.")
+    status: OptionalStr = Field(default=None, description="Filter by status: 'open', 'done', or 'blocked'.")
 
 
 class CreateTask(BaseModel):
     title: str = Field(description="Short, human-readable task title.")
     due_date: str | None = Field(default=None, description="ISO date (YYYY-MM-DD), if known.")
-    tags: list[str] = Field(default_factory=list)
+    tags: StrList = Field(default_factory=list)
     source_email_id: str | None = Field(default=None, description="Email id this task was derived from, if any.")
 
 
@@ -39,7 +41,7 @@ class ScheduleEvent(BaseModel):
     title: str
     start: str = Field(description="ISO datetime.")
     end: str = Field(description="ISO datetime.")
-    attendees: list[str] = Field(default_factory=list)
+    attendees: StrList = Field(default_factory=list)
     location: str | None = None
 
 

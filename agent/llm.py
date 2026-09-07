@@ -47,12 +47,18 @@ class LLMClient:
         self,
         messages: list[dict],
         tools: list[dict] | None = None,
+        tool_choice: str | dict = "auto",
         temperature: float = 0.2,
     ) -> ChatResult:
+        """`tool_choice` follows the OpenAI wire format: "auto" (default),
+        "none", "required", or a forced-call dict like
+        `{"type": "function", "function": {"name": "some_tool"}}` — the last
+        form is what the verify node uses to guarantee structured output
+        instead of hoping the model calls the right tool on its own."""
         kwargs: dict = {"model": self.model, "messages": messages, "temperature": temperature}
         if tools:
             kwargs["tools"] = tools
-            kwargs["tool_choice"] = "auto"
+            kwargs["tool_choice"] = tool_choice
 
         response = self._client.chat.completions.create(**kwargs)
         choice = response.choices[0]

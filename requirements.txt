@@ -2,3 +2,4 @@ openai>=1.40
 pydantic>=2.7
 pytest>=8.0
 python-dotenv>=1.0
+langgraph>=1.2

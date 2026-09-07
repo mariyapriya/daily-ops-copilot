@@ -81,6 +81,31 @@ def test_dispatch_normalizes_literal_null_string_to_none(store: Store):
     assert result == dispatch(store, "get_tasks", {})
 
 
+def test_dispatch_coerces_json_stringified_list_argument(store: Store):
+    """Regression test for another real small-model quirk (distinct from the
+    null-sentinel one): a forced tool call for report_verification came back
+    with `issues` as the *string* '["Meeting time discrepancy"]' instead of a
+    native JSON array. Pydantic rejects a bare string for list[str] outright,
+    which would otherwise turn an entirely correct tool call into a hard
+    validation error. create_task's `tags` field uses the same StrList type,
+    so this is tested here directly against dispatch."""
+    result = dispatch(store, "create_task", {"title": "Test", "tags": '["reporting", "urgent"]'})
+    assert "error" not in result
+    assert result["tags"] == ["reporting", "urgent"]
+
+
+def test_dispatch_coerces_single_element_list_to_scalar_string(store: Store):
+    """Regression test for a third real quirk, the mirror image of the
+    stringified-list one: observed live from the local model calling
+    get_tasks(status=["open"]) instead of status="open" for a plain
+    `str | None` filter field. Before this fix, Pydantic raised a hard
+    validation error on an otherwise perfectly clear tool call."""
+    result = dispatch(store, "get_tasks", {"status": ["open"]})
+    assert "error" not in result
+    assert isinstance(result, list)
+    assert all(t["status"] == "open" for t in result)
+
+
 def test_dispatch_search_notes(store: Store):
     result = dispatch(store, "search_notes", {"query": "migration"})
     assert any("migration" in n["body"].lower() or "migration" in n["title"].lower() for n in result)
