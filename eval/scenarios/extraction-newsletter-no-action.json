@@ -1,0 +1,26 @@
+{
+  "id": "extraction-newsletter-no-action",
+  "category": "extraction",
+  "description": "A true-negative check: a low-signal newsletter email with no request in it must not be treated as urgent or actionable.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [
+      {
+        "id": "em-eval-2",
+        "from": "newsletter@devtools.io",
+        "to": "me@acme.com",
+        "subject": "This week in dev tools",
+        "body": "Here are the top 5 dev tool releases this week. No action needed, just for your reading pleasure.",
+        "received_at": "2026-09-09T07:00:00",
+        "thread_id": "th-eval-2"
+      }
+    ],
+    "calendar_events": [],
+    "tasks": [],
+    "notes": []
+  },
+  "checks": {
+    "contains_none": ["urgent", "overdue"],
+    "expect_verified_ok": true
+  }
+}

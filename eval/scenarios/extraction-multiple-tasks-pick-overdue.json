@@ -1,0 +1,45 @@
+{
+  "id": "extraction-multiple-tasks-pick-overdue",
+  "category": "extraction",
+  "description": "Among several open tasks with different due dates, only the genuinely overdue one should be called out as overdue.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [],
+    "calendar_events": [],
+    "tasks": [
+      {
+        "id": "tk-eval-4",
+        "title": "File Q2 expense receipts",
+        "status": "open",
+        "due_date": "2026-08-01",
+        "created_at": "2026-07-20T09:00:00",
+        "source_email_id": null,
+        "tags": ["admin"]
+      },
+      {
+        "id": "tk-eval-5",
+        "title": "Draft Q4 planning doc",
+        "status": "open",
+        "due_date": "2026-10-15",
+        "created_at": "2026-09-01T09:00:00",
+        "source_email_id": null,
+        "tags": ["planning"]
+      },
+      {
+        "id": "tk-eval-6",
+        "title": "Book team offsite venue",
+        "status": "open",
+        "due_date": "2026-11-01",
+        "created_at": "2026-09-05T09:00:00",
+        "source_email_id": null,
+        "tags": ["planning"]
+      }
+    ],
+    "notes": []
+  },
+  "checks": {
+    "contains_all": ["Q2 expense receipts", "overdue"],
+    "contains_none": ["Q4 planning doc is overdue", "offsite venue is overdue"],
+    "expect_verified_ok": true
+  }
+}

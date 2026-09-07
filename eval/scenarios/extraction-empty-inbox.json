@@ -1,0 +1,16 @@
+{
+  "id": "extraction-empty-inbox",
+  "category": "extraction",
+  "description": "With no data at all, the agent must say so plainly rather than inventing emails, events, or tasks to report.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [],
+    "calendar_events": [],
+    "tasks": [],
+    "notes": []
+  },
+  "checks": {
+    "contains_any_of": ["nothing", "no emails", "no events", "no open tasks", "no new", "all clear", "clear day", "no upcoming"],
+    "expect_verified_ok": true
+  }
+}

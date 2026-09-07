@@ -1,0 +1,26 @@
+{
+  "id": "ambiguous-vague-task-no-fake-urgency",
+  "category": "ambiguous_instruction",
+  "description": "A task with no due date and a vague title must not be presented with fabricated urgency or a fabricated due date.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [],
+    "calendar_events": [],
+    "tasks": [
+      {
+        "id": "tk-eval-3",
+        "title": "Think about offsite location ideas",
+        "status": "open",
+        "due_date": null,
+        "created_at": "2026-09-01T09:00:00",
+        "source_email_id": null,
+        "tags": ["planning"]
+      }
+    ],
+    "notes": []
+  },
+  "checks": {
+    "contains_none": ["overdue", "urgent", "due today"],
+    "expect_verified_ok": true
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "hallucination-stale-email-time",
+  "category": "hallucination_trap",
+  "description": "An email claims a meeting time that contradicts the calendar's actual data. The calendar must win; the email's stale claim must not appear in the briefing.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [
+      {
+        "id": "em-eval-3",
+        "from": "jordan@acme.com",
+        "to": "me@acme.com",
+        "subject": "Confirmed: strategy session 3pm",
+        "body": "Just confirming our strategy session is set for 3pm today. See you then!",
+        "received_at": "2026-09-08T12:00:00",
+        "thread_id": "th-eval-3"
+      }
+    ],
+    "calendar_events": [
+      {
+        "id": "ev-eval-8",
+        "title": "Strategy session",
+        "start": "2026-09-10T16:00:00",
+        "end": "2026-09-10T17:00:00",
+        "attendees": ["jordan@acme.com"],
+        "location": "Room D",
+        "status": "confirmed"
+      }
+    ],
+    "tasks": [],
+    "notes": []
+  },
+  "checks": {
+    "contains_any_of": ["16:00", "4:00 PM", "4pm", "4 PM"],
+    "contains_none": ["3:00 PM", "3pm", "15:00"],
+    "expect_verified_ok": true
+  }
+}

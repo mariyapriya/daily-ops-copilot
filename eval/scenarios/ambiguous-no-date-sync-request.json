@@ -1,0 +1,26 @@
+{
+  "id": "ambiguous-no-date-sync-request",
+  "category": "ambiguous_instruction",
+  "description": "An email asks to sync 'sometime this week' with no concrete date or calendar event backing it. The agent must not invent a specific day/time that isn't grounded in any retrieved fact.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [
+      {
+        "id": "em-eval-5",
+        "from": "riley@acme.com",
+        "to": "me@acme.com",
+        "subject": "Quick sync?",
+        "body": "Let's find time to sync sometime this week about the vendor contract. Let me know what works for you.",
+        "received_at": "2026-09-09T09:00:00",
+        "thread_id": "th-eval-5"
+      }
+    ],
+    "calendar_events": [],
+    "tasks": [],
+    "notes": []
+  },
+  "checks": {
+    "contains_any_of": ["sync", "vendor contract"],
+    "expect_verified_ok": true
+  }
+}

@@ -52,6 +52,22 @@ def test_search_notes_finds_by_keyword(store: Store):
     assert store.search_notes("no-such-keyword-xyz") == []
 
 
+def test_seed_from_data_seeds_an_isolated_dataset():
+    """seed_from_data is what eval/run_eval.py uses to give each scenario its
+    own minimal, isolated fixture instead of sharing data/*.json."""
+    s = Store(db_path=":memory:")
+    s.seed_from_data(
+        emails=[{"id": "em-x", "from": "a@x.com", "to": "b@x.com", "subject": "s", "body": "b", "received_at": "2026-01-01T00:00:00"}],
+        events=[],
+        tasks=[{"id": "tk-x", "title": "Test", "status": "open", "due_date": None, "created_at": "2026-01-01T00:00:00"}],
+        notes=[],
+    )
+    assert len(s.list_emails()) == 1
+    assert len(s.list_calendar_events()) == 0
+    assert len(s.list_tasks()) == 1
+    assert len(s.search_notes("")) == 0
+
+
 def test_double_booked_events_both_present(store: Store):
     """Fixture data intentionally double-books ev-001 and ev-002 at overlapping
     times on 2026-09-10 — the store must surface both, not silently dedupe or

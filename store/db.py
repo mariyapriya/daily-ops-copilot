@@ -96,6 +96,20 @@ class Store:
         events = json.loads((data_dir / "calendar.json").read_text())
         tasks = json.loads((data_dir / "tasks.json").read_text())
         notes = json.loads((data_dir / "notes.json").read_text())
+        self.seed_from_data(emails, events, tasks, notes)
+
+    def seed_from_data(
+        self,
+        emails: list[dict] | None = None,
+        events: list[dict] | None = None,
+        tasks: list[dict] | None = None,
+        notes: list[dict] | None = None,
+    ) -> None:
+        """Same insertion logic as seed_from_fixtures, but from in-memory
+        lists rather than files — used by eval/run_eval.py to seed a fresh,
+        isolated store per scenario without needing a fixture file on disk
+        for every one of them."""
+        emails, events, tasks, notes = emails or [], events or [], tasks or [], notes or []
 
         with self._cursor() as cur:
             for e in emails:

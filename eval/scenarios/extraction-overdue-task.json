@@ -1,0 +1,26 @@
+{
+  "id": "extraction-overdue-task",
+  "category": "extraction",
+  "description": "A single open task whose due date is clearly in the past relative to 'today' must be flagged as overdue.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [],
+    "calendar_events": [],
+    "tasks": [
+      {
+        "id": "tk-eval-1",
+        "title": "Renew office WiFi contract",
+        "status": "open",
+        "due_date": "2026-08-15",
+        "created_at": "2026-08-01T09:00:00",
+        "source_email_id": null,
+        "tags": ["admin"]
+      }
+    ],
+    "notes": []
+  },
+  "checks": {
+    "contains_all": ["overdue"],
+    "expect_verified_ok": true
+  }
+}

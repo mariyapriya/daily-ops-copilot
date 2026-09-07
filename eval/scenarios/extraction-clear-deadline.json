@@ -1,0 +1,26 @@
+{
+  "id": "extraction-clear-deadline",
+  "category": "extraction",
+  "description": "A single email with an explicit, unambiguous deadline must be surfaced as needing action today.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [
+      {
+        "id": "em-eval-1",
+        "from": "lena@acme.com",
+        "to": "me@acme.com",
+        "subject": "Budget spreadsheet",
+        "body": "Can you send the updated budget spreadsheet by Friday? The finance team needs it before their review.",
+        "received_at": "2026-09-09T10:00:00",
+        "thread_id": "th-eval-1"
+      }
+    ],
+    "calendar_events": [],
+    "tasks": [],
+    "notes": []
+  },
+  "checks": {
+    "contains_any_of": ["Friday", "budget spreadsheet", "budget"],
+    "expect_verified_ok": true
+  }
+}

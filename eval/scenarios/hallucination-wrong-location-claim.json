@@ -1,0 +1,37 @@
+{
+  "id": "hallucination-wrong-location-claim",
+  "category": "hallucination_trap",
+  "description": "An email claims a meeting location that contradicts the calendar's actual location. The calendar must win.",
+  "today": "2026-09-10",
+  "data": {
+    "emails": [
+      {
+        "id": "em-eval-4",
+        "from": "sam@acme.com",
+        "to": "me@acme.com",
+        "subject": "Reminder: onboarding session in Room A",
+        "body": "Quick reminder that today's onboarding session is happening in Room A as usual.",
+        "received_at": "2026-09-09T15:00:00",
+        "thread_id": "th-eval-4"
+      }
+    ],
+    "calendar_events": [
+      {
+        "id": "ev-eval-9",
+        "title": "Onboarding session",
+        "start": "2026-09-10T11:00:00",
+        "end": "2026-09-10T12:00:00",
+        "attendees": ["newhire@acme.com"],
+        "location": "Room F (moved)",
+        "status": "confirmed"
+      }
+    ],
+    "tasks": [],
+    "notes": []
+  },
+  "checks": {
+    "contains_any_of": ["Room F"],
+    "contains_none": ["Room A"],
+    "expect_verified_ok": true
+  }
+}
