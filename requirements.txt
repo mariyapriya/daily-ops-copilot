@@ -3,3 +3,6 @@ pydantic>=2.7
 pytest>=8.0
 python-dotenv>=1.0
 langgraph>=1.2
+streamlit>=1.37
+altair>=5.0
+pandas>=2.0

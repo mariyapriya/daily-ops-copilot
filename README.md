@@ -17,15 +17,62 @@ own data store. That last point is the whole point — LLMs are probabilistic;
 the engineering problem is making their outputs predictable, observable, and
 safe anyway.
 
-## Current status: Week 3 — systematic evaluation
+### System architecture
 
-**Headline result**: a 13-scenario eval suite against the free local model
-(`llama3.2`) scores **5 PASS / 4 SAFE_CAVEAT / 4 FAIL (38% clean pass
-rate)**. The failures aren't subtle wording misses — several are the model
-**wholesale fabricating calendar events and tasks that don't exist in the
-ground truth at all**, and the LLM-judge half of the verify node sometimes
-misses this even though it reliably catches narrower single-fact errors.
-Full details and the actual generated text are in the
+```mermaid
+flowchart LR
+    subgraph Data["Data layer"]
+        F["Synthetic fixtures /\neval scenario data"]
+    end
+    subgraph Store["store/db.py"]
+        DB[("SQLite\n(source of truth)")]
+    end
+    subgraph Tools["tools/"]
+        T["registry.py\n8 Pydantic-schema'd tools"]
+    end
+    subgraph Agent["agent/"]
+        LLM["llm.py\nOpenAI-compatible client\n(local Ollama <-> hosted API)"]
+        Graph["graph.py\nLangGraph orchestration\n+ verify/guardrail node"]
+        Naive["naive_agent.py\nWeek 1 baseline"]
+        Trace["tracing.py + cost.py"]
+    end
+    subgraph Surfaces["Ways to run it"]
+        CLI["main.py\n--engine naive|graph"]
+        Eval["eval/run_eval.py\n13 labeled scenarios"]
+        UI["app.py\nStreamlit dashboard"]
+    end
+
+    F --> DB
+    DB <--> T
+    T <--> Graph
+    T <--> Naive
+    LLM <--> Graph
+    LLM <--> Naive
+    Graph --> Trace
+
+    CLI --> Graph
+    CLI --> Naive
+    Eval --> Graph
+    UI --> Graph
+    UI --> Naive
+    UI --> Trace
+    UI --> Eval
+```
+
+## Current status: Week 4 — dashboard, diagrams, and a portfolio-ready README
+
+All four planned weeks are now built: a grounded baseline agent, a LangGraph
+orchestration with a verify/guardrail node, a systematic eval suite, and
+(this week) a Streamlit dashboard plus the architecture diagram above.
+
+**Headline result, still the most important finding in this repo**: the
+Week 3 eval suite against the free local model (`llama3.2`) scored **5 PASS
+/ 4 SAFE_CAVEAT / 4 FAIL (38% clean pass rate)**. The failures aren't
+subtle wording misses — several are the model **wholesale fabricating
+calendar events and tasks that don't exist in the ground truth at all**,
+and the LLM-judge half of the verify node sometimes misses this even though
+it reliably catches narrower single-fact errors. Full details and the
+actual generated text are in the
 [Week 3 section](#week-3-evaluation-framework) below. This is reported as a
 genuine, expected finding about a small free local model's real limits, not
 walked back or hidden — that's the entire point of building an eval suite
@@ -101,10 +148,14 @@ by hand.
 
 ### Architecture
 
-```
-plan → agent ⇄ tools → verify ─┬─(ok, or attempts exhausted)─→ finalize
-                    ▲            │
-                    └─(issues, attempts remain)┘
+```mermaid
+flowchart LR
+    plan --> agent
+    agent -- "tool calls" --> tools
+    tools --> agent
+    agent -- "no more tool calls" --> verify
+    verify -- "ok, or attempts exhausted" --> finalize
+    verify -- "issues, attempts remain" --> agent
 ```
 
 (`agent/graph.py`). `plan` and `agent`/`tools` follow the same message
@@ -294,6 +345,37 @@ growing conversation; and treat `llama3.2` as the free/local *fallback*
 tier, with a hosted model as the intended default for anything beyond a
 portfolio demo.
 
+## Week 4: dashboard
+
+A Streamlit app (`app.py`) that reuses the exact same `store`/`tools`/`agent`/
+`eval` code the CLI uses — a viewer and trigger, not a parallel
+implementation — with three tabs:
+
+- **Run Briefing** — pick any dataset (the flagship double-booking/stale-email
+  fixtures, or any of the 13 isolated eval scenarios), an engine
+  (`naive`/`graph`), and a date, then run the real agent live and see the
+  briefing, `verified_ok`/attempts, tokens, and estimated cost.
+- **Trace Explorer** — loads any `traces/*.jsonl` file (including the one
+  just produced) as a timeline table with an expandable raw-JSON view per
+  step. Deliberately doesn't force the Week 1 naive agent's simpler trace
+  format into this view — Week 1 predates `agent/tracing.py`, and that gap
+  is itself part of the Week 1→2 story, not something to paper over.
+- **Eval Dashboard** — loads any `eval/results/*.json` file, with an
+  outcome-breakdown chart (PASS/SAFE_CAVEAT/FAIL) and a per-category
+  pass-rate chart, plus a button to run one scenario live and add it to the
+  results. Chart colors are the validated status/categorical palette from
+  this project's color-accessibility pass (status colors — good/warning/
+  critical — for the 3-way outcome, since that's state, not identity;
+  fixed-order categorical hues for the 4 scenario categories), not
+  arbitrary defaults.
+
+Run it: `streamlit run app.py`. Verified by directly exercising the
+data-loading and Altair chart-construction logic against the real fixtures,
+scenarios, trace files, and eval results in this repo (no import or runtime
+errors) — full interactive browser verification wasn't available in the
+session that built this, so give it a first click-through yourself before
+treating it as polished.
+
 ## Setup
 
 ```bash
@@ -307,6 +389,8 @@ python main.py --engine naive --today 2026-09-10                # Week 1 baselin
 
 python -m eval.run_eval                                         # full eval suite (~15-25 min locally)
 python -m eval.run_eval --scenario hallucination-stale-email-time  # a single scenario
+
+streamlit run app.py                                             # dashboard: run/trace/eval views
 ```
 
 Environment variables (all optional, default to local Ollama):
@@ -326,8 +410,23 @@ separate, slower step from the fast unit-test suite, not part of it.
 
 ## Roadmap
 
-- **Week 4**: Streamlit demo (briefing / trace timeline / eval dashboard),
-  architecture diagram, short demo recording. Stretch: swap the synthetic
-  fixtures for a real Google Calendar/Gmail integration behind the same
-  tool interface, and/or try a stronger verifier model per the Week 3
-  recommendations above.
+The original 4-week plan is complete: grounded baseline agent, LangGraph
+orchestration with a verify/guardrail node, a systematic eval suite, and a
+dashboard + architecture diagrams. A demo video/screen-recording was
+deliberately scoped out rather than half-done — this README's actual
+generated output (Week 2's before/after, Week 3's real eval results) does
+that job in text instead.
+
+**Possible next steps**, not committed to a timeline:
+
+- Try a stronger model specifically for the `verify` step (Week 3's own
+  recommendation) and re-run the eval suite to see whether the 38% pass
+  rate is a `llama3.2` ceiling or something the guardrail architecture can
+  close further with a better judge.
+- Real Google Calendar/Gmail integration behind the existing `tools/`
+  interface, replacing the synthetic fixtures — the tool contracts
+  (`tools/schemas.py`) were written generically enough that this shouldn't
+  require changing the agent or graph at all, only the tool implementations.
+- Human-in-the-loop write actions (drafting a reply, creating a task) gated
+  behind an approve/reject step in the dashboard, using LangGraph's
+  `interrupt()` — deferred from Week 2 specifically to pair with this UI.
