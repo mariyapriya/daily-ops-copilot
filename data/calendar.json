@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ev-001",
+    "title": "Design review",
+    "start": "2026-09-10T15:00:00",
+    "end": "2026-09-10T16:00:00",
+    "attendees": [
+      "sam@acme.com",
+      "me@acme.com"
+    ],
+    "location": "Room B",
+    "status": "confirmed"
+  },
+  {
+    "id": "ev-002",
+    "title": "1:1 with manager",
+    "start": "2026-09-10T15:30:00",
+    "end": "2026-09-10T16:00:00",
+    "attendees": [
+      "manager@acme.com",
+      "me@acme.com"
+    ],
+    "location": "Zoom",
+    "status": "confirmed"
+  },
+  {
+    "id": "ev-003",
+    "title": "Daily standup",
+    "start": "2026-09-08T09:00:00",
+    "end": "2026-09-08T09:15:00",
+    "attendees": [
+      "team@acme.com"
+    ],
+    "location": "Zoom",
+    "status": "confirmed"
+  }
+]

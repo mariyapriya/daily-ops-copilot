@@ -1,0 +1,47 @@
+[
+  {
+    "id": "em-001",
+    "from": "priya@acme.com",
+    "to": "me@acme.com",
+    "subject": "Q3 roadmap deck",
+    "body": "Hey, can you send me the Q3 roadmap deck by Friday? Want to review before the board meeting.",
+    "received_at": "2026-09-01T09:12:00",
+    "thread_id": "th-001"
+  },
+  {
+    "id": "em-002",
+    "from": "priya@acme.com",
+    "to": "me@acme.com",
+    "subject": "Re: Q3 roadmap deck",
+    "body": "Following up \u2014 did you get a chance to send the Q3 deck over yet?",
+    "received_at": "2026-09-05T14:03:00",
+    "thread_id": "th-001"
+  },
+  {
+    "id": "em-003",
+    "from": "dev@acme.com",
+    "to": "me@acme.com",
+    "subject": "Sync this week?",
+    "body": "Let's sync sometime this week about the migration timeline. Let me know what works.",
+    "received_at": "2026-09-02T11:30:00",
+    "thread_id": "th-002"
+  },
+  {
+    "id": "em-004",
+    "from": "sam@acme.com",
+    "to": "me@acme.com",
+    "subject": "Confirmed: Design review Thursday 2pm",
+    "body": "Confirming our design review is set for Thursday at 2pm in Room B. See you there!",
+    "received_at": "2026-09-03T08:45:00",
+    "thread_id": "th-003"
+  },
+  {
+    "id": "em-005",
+    "from": "newsletter@saastools.io",
+    "to": "me@acme.com",
+    "subject": "5 productivity hacks you need in 2026",
+    "body": "Discover the top 5 tools power users swear by this year...",
+    "received_at": "2026-09-04T06:00:00",
+    "thread_id": "th-004"
+  }
+]
